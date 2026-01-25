@@ -1,0 +1,28 @@
+project:
+  type: website
+
+website:
+  title: "Visualizing Insight"
+  navbar:
+    left:
+      - href: Introduction.qmd
+        text: Home
+      - href: Redesigns.qmd
+        text: Original Visualization & Redesigns
+      - href: BlankSean.qmd
+        text: Original Visualization 2 Sean
+      - href: Codes.qmd
+        text: Original Code
+      - href: Present.qmd
+        text: Video Presentationm
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+editor: visual
+

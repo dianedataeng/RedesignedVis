@@ -1,0 +1,67 @@
+---
+title: "Visualizing Insight: Redesigning Data Visualizations"
+---
+
+## 👋 Welcome
+
+This project focuses on evaluating a real-world data visualization, identifying its limitations, and creating redesigned versions that enhance clarity, interpretability, and insight.
+
+Using publicly available opioid dispensing data from the **Centers for Disease Control and Prevention (CDC)**, I redesigned the original visualization to better highlight:
+
+-   Geographic patterns across the U.S.
+-   Temporal changes over time
+-   State-level differences in opioid dispensing
+
+------------------------------------------------------------------------
+
+## 📌 Project Overview
+
+### 🎯 Objective
+
+The objective of this project is to **identify an existing real-world visualization**, analyze its limitations, and create **multiple redesigned versions** that improve clarity, interpretability, and insight within the original context.
+
+Using publicly available opioid dispensing data from the **Centers for Disease Control and Prevention (CDC)**, I selected an existing visualization and produced redesigned charts that better highlight:
+
+-   Geographic patterns
+-   Changes over time
+-   Differences across U.S. states
+
+------------------------------------------------------------------------
+
+## 📊 Original Visualization & Redesigns
+
+### Original Visualization
+
+The original visualization displayed U.S. opioid dispensing rates but made it difficult to:
+
+-   Compare trends across states
+-   Identify regional patterns
+-   Clearly interpret changes between years
+
+### Redesigned Visualizations
+
+I created several redesigned visualizations, including:
+
+-   A **heat map** to reveal geographic and intensity-based patterns
+-   A **stacked bar chart** to highlight changes between 2019 and 2023
+
+Each redesign is accompanied by a **comparative analysis** discussing the strengths and weaknesses of both the original and redesigned plots, with attention to audience and context.
+
+➡️ Navigate to **Original Visualization & Redesigns** to view the full analysis.
+
+------------------------------------------------------------------------
+
+## 🛠️ Tools & Methods
+
+-   **R & Quarto** for data processing, visualization, and website creation\
+-   **ggplot2** for static visualizations\
+-   **Plotly** for interactive charts\
+-   **Data Source:** Centers for Disease Control and Prevention (CDC)
+
+------------------------------------------------------------------------
+
+## 📧 Contact
+
+-   ![](https://static.vecteezy.com/system/resources/previews/002/205/854/non_2x/email-icon-free-vector.jpg){width="3%"} [Email Diane Kim](dianekim015@gmail.com) ![](https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg){width="3%"}[Diane’s GitHub](https://github.com/dianokong)
+
+Thank you for visiting. This project reflects my approach to thoughtful visualization design and critical evaluation of data-driven communication.
