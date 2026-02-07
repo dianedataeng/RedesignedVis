@@ -163,9 +163,3 @@ fig <- fig %>% layout(
   colorbar = list(title = "Rate per 100 persons")
 )
 ```
-
-# Sean
-
-```{r}
-
-```
