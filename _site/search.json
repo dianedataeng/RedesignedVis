@@ -14,43 +14,43 @@
     "text": "Heat Map - Redesign\n\n#Download Library\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(scales)\nlibrary(plotly)\n\n#Import Dataset\nOpioidData = read.csv(\"C:/Users/diane/Downloads/Dispensing_Rates.csv\") #make sure its forward slash\n\n# --- Prepare long_data (include both 2019 and 2023) ---\nlong_data &lt;- OpioidData %&gt;%\n  filter(YEAR %in% c(2019, 2023)) %&gt;%\n  rename(Year = YEAR, Rate = opioid_dispensing_rate) %&gt;%\n  group_by(STATE_NAME, STATE_ABBREV) %&gt;%\n  mutate(\n    pct_change = (Rate[Year == 2023] - Rate[Year == 2019]) / Rate[Year == 2019] * 100\n  ) %&gt;%\n  ungroup()\n\n# --- Order states by 2019 rates ---\nordered_states &lt;- long_data %&gt;%\n  filter(Year == 2019) %&gt;%\n  arrange(desc(Rate)) %&gt;%\n  pull(STATE_ABBREV)\n\nlong_data &lt;- long_data %&gt;%\n  mutate(STATE_ABBREV = factor(STATE_ABBREV, levels = ordered_states))\n\n# --- Add hover text ---\nlong_data &lt;- long_data %&gt;%\n  mutate(\n    hover_text = paste0(\n      \"&lt;b&gt;State:&lt;/b&gt; \", STATE_NAME,\n      \"&lt;br&gt;&lt;b&gt;Year:&lt;/b&gt; \", Year,\n      \"&lt;br&gt;&lt;b&gt;Rate:&lt;/b&gt; \", round(Rate, 2),\n      \"&lt;br&gt;&lt;b&gt;% Change (2019→2023):&lt;/b&gt; \", round(pct_change, 1), \"%\"\n    )\n  )\n\n# --- Build overlay comparison bar chart ---\nstackedbar_plotly_h &lt;- plot_ly() %&gt;%\n  # 2019 = background bar\n  add_trace(\n    data = long_data %&gt;% filter(Year == 2019),\n    x = ~Rate,\n    y = ~STATE_ABBREV,\n    type = \"bar\",\n    orientation = \"h\",\n    name = \"2019\",\n    marker = list(color = \"rgba(255,0,0,0.4)\"),  # transparent red\n    text = ~hover_text,\n    hoverinfo = \"text\"\n  ) %&gt;%\n  # 2023 = overlay bar\n  add_trace(\n    data = long_data %&gt;% filter(Year == 2023),\n    x = ~Rate,\n    y = ~STATE_ABBREV,\n    type = \"bar\",\n    orientation = \"h\",\n    name = \"2023\",\n    marker = list(color = \"rgba(0,0,139,0.8)\"),  # dark blue\n    text = ~hover_text,\n    hoverinfo = \"text\"\n  ) %&gt;%\n  layout(\n    barmode = \"overlay\",\n    title = \"Opioid Dispensing Rates by State: 2019 vs 2023\",\n    xaxis = list(title = \"Rate (per 100 persons)\"),\n    yaxis = list(title = \"State\", categoryorder = \"array\", categoryarray = rev(ordered_states)),\n    legend = list(title = list(text = \"Year\"))\n  )\n\n\n\nStacked Bar Chart - Redesign\n\nlibrary(plotly)\nlibrary(dplyr)\nlibrary(tidyr)\n\nMapOpioid &lt;- read.csv(\"C:/Users/diane/Downloads/Dispensing_Rates.csv\") %&gt;%\n  filter(YEAR %in% c(2019, 2023))\n\n# Pivot wider so we have columns for 2019 and 2023 rates ---\nwide_data &lt;- MapOpioid %&gt;%\n  select(STATE_NAME, STATE_ABBREV, YEAR, opioid_dispensing_rate) %&gt;%\n  pivot_wider(names_from = YEAR, values_from = opioid_dispensing_rate)\n\n# - Prepare hover text for each year ---\nwide_data &lt;- wide_data %&gt;%\n  mutate(\n    hover_2019 = paste0(STATE_NAME, \"&lt;br&gt;2019 Rate: \", `2019`),\n    hover_2023 = paste0(STATE_NAME, \"&lt;br&gt;2023 Rate: \", `2023`)\n  )\n\n#  Map options ---\ng &lt;- list(\n  scope = 'usa',\n  projection = list(type = 'albers usa'),\n  showlakes = TRUE,\n  lakecolor = toRGB('white')\n)\n\n#  Create the map ---\nfig &lt;- plot_geo(wide_data, locationmode = 'USA-states')\n\n# Add 2019 trace (initially visible)\nfig &lt;- fig %&gt;% add_trace(\n  z = ~`2019`,\n  text = ~hover_2019,               # custom hover text\n  hoverinfo = \"text\",               # 👈 ensures it shows only our text\n  locations = ~STATE_ABBREV,\n  color = ~`2019`,\n  colors = 'Reds',\n  visible = TRUE,\n  name = \"2019\"\n)\n\n# Add 2023 trace (initially hidden)\nfig &lt;- fig %&gt;% add_trace(\n  z = ~`2023`,\n  text = ~hover_2023,               # custom hover text\n  hoverinfo = \"text\",               # 👈 same here\n  locations = ~STATE_ABBREV,\n  color = ~`2023`,\n  colors = 'Reds',\n  visible = FALSE,\n  name = \"2023\"\n)\n\n# --- 6️⃣ Add dropdown menu to toggle years ---\nfig &lt;- fig %&gt;% layout(\n  title = \"Opioid Dispensing Rates by State\",\n  geo = g,\n  updatemenus = list(\n    list(\n      type = \"dropdown\",\n      active = 0,\n      buttons = list(\n        list(method = \"update\",\n             args = list(list(visible = c(TRUE, FALSE)),\n                         list(title = \"Opioid Dispensing Rates: 2019\")),\n             label = \"2019\"),\n        list(method = \"update\",\n             args = list(list(visible = c(FALSE, TRUE)),\n                         list(title = \"Opioid Dispensing Rates: 2023\")),\n             label = \"2023\")\n      )\n    )\n  ),\n  colorbar = list(title = \"Rate per 100 persons\")\n)\n\n\n\nSean"
   },
   {
-    "objectID": "intro.html",
-    "href": "intro.html",
+    "objectID": "index.html",
+    "href": "index.html",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "",
     "text": "This project focuses on evaluating a real-world data visualization, identifying its limitations, and creating redesigned versions that enhance clarity, interpretability, and insight.\nUsing publicly available opioid dispensing data from the Centers for Disease Control and Prevention (CDC), I redesigned the original visualization to better highlight:\n\nGeographic patterns across the U.S.\nTemporal changes over time\nState-level differences in opioid dispensing"
   },
   {
-    "objectID": "intro.html#welcome",
-    "href": "intro.html#welcome",
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "",
     "text": "This project focuses on evaluating a real-world data visualization, identifying its limitations, and creating redesigned versions that enhance clarity, interpretability, and insight.\nUsing publicly available opioid dispensing data from the Centers for Disease Control and Prevention (CDC), I redesigned the original visualization to better highlight:\n\nGeographic patterns across the U.S.\nTemporal changes over time\nState-level differences in opioid dispensing"
   },
   {
-    "objectID": "intro.html#project-overview",
-    "href": "intro.html#project-overview",
+    "objectID": "index.html#project-overview",
+    "href": "index.html#project-overview",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "📌 Project Overview",
     "text": "📌 Project Overview\n\n🎯 Objective\nThe objective of this project is to identify an existing real-world visualization, analyze its limitations, and create multiple redesigned versions that improve clarity, interpretability, and insight within the original context.\nUsing publicly available opioid dispensing data from the Centers for Disease Control and Prevention (CDC), I selected an existing visualization and produced redesigned charts that better highlight:\n\nGeographic patterns\nChanges over time\nDifferences across U.S. states"
   },
   {
-    "objectID": "intro.html#original-visualization-redesigns",
-    "href": "intro.html#original-visualization-redesigns",
+    "objectID": "index.html#original-visualization-redesigns",
+    "href": "index.html#original-visualization-redesigns",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "📊 Original Visualization & Redesigns",
     "text": "📊 Original Visualization & Redesigns\n\nOriginal Visualization\nThe original visualization displayed U.S. opioid dispensing rates but made it difficult to:\n\nCompare trends across states\nIdentify regional patterns\nClearly interpret changes between years\n\n\n\nRedesigned Visualizations\nI created several redesigned visualizations, including:\n\nA heat map to reveal geographic and intensity-based patterns\nA stacked bar chart to highlight changes between 2019 and 2023\n\nEach redesign is accompanied by a comparative analysis discussing the strengths and weaknesses of both the original and redesigned plots, with attention to audience and context.\n➡️ Navigate to Original Visualization & Redesigns to view the full analysis."
   },
   {
-    "objectID": "intro.html#tools-methods",
-    "href": "intro.html#tools-methods",
+    "objectID": "index.html#tools-methods",
+    "href": "index.html#tools-methods",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "🛠️ Tools & Methods",
     "text": "🛠️ Tools & Methods\n\nR & Quarto for data processing, visualization, and website creation\n\nggplot2 for static visualizations\n\nPlotly for interactive charts\n\nData Source: Centers for Disease Control and Prevention (CDC)"
   },
   {
-    "objectID": "intro.html#contact",
-    "href": "intro.html#contact",
+    "objectID": "index.html#contact",
+    "href": "index.html#contact",
     "title": "Visualizing Insight: Redesigning Data Visualizations",
     "section": "📧 Contact",
     "text": "📧 Contact\n\n Email Diane Kim Diane’s GitHub\n\nThank you for visiting. This project reflects my approach to thoughtful visualization design and critical evaluation of data-driven communication."
